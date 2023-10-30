@@ -49,7 +49,7 @@ func changeDirectory(args []string) (err error) {
 	} else if argc == 2 {
 		dir = args[1]
 	} else {
-		return fmt.Errorf("5s: too many arguments", "cd")
+		return fmt.Errorf("%s: too many arguments", "cd")
 	}
 	return os.Chdir(dir)
 }
