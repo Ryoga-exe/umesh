@@ -7,14 +7,16 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/Ryoga-exe/umesh/internal/builtin_commands"
 )
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	buitinCommands := map[string]func([]string) error{
-		"cd":   changeDirectory,
-		"exit": exit,
+		"cd":   builtin_commands.Cd,
+		"exit": builtin_commands.Exit,
 	}
 
 	for {
@@ -36,27 +38,6 @@ func main() {
 			err = execCommand(argv)
 		}
 	}
-}
-
-func changeDirectory(argv []string) (err error) {
-	var dir string
-	argc := len(argv)
-	if argc == 1 {
-		dir, err = os.UserHomeDir()
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else if argc == 2 {
-		dir = argv[1]
-	} else {
-		return fmt.Errorf("%s: too many arguments", "cd")
-	}
-	return os.Chdir(dir)
-}
-
-func exit(argv []string) (err error) {
-	os.Exit(0)
-	return nil
 }
 
 func execCommand(argv []string) (err error) {
