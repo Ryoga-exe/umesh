@@ -26,41 +26,41 @@ func main() {
 			log.Fatal(err)
 		}
 
-		args := strings.Split(string(line), " ")
+		argv := strings.Split(string(line), " ")
 
-		buitinCommand, ok := buitinCommands[args[0]]
+		buitinCommand, ok := buitinCommands[argv[0]]
 
 		if ok {
-			err = buitinCommand(args)
+			err = buitinCommand(argv)
 		} else {
-			err = execCommand(args)
+			err = execCommand(argv)
 		}
 	}
 }
 
-func changeDirectory(args []string) (err error) {
+func changeDirectory(argv []string) (err error) {
 	var dir string
-	argc := len(args)
+	argc := len(argv)
 	if argc == 1 {
 		dir, err = os.UserHomeDir()
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else if argc == 2 {
-		dir = args[1]
+		dir = argv[1]
 	} else {
 		return fmt.Errorf("%s: too many arguments", "cd")
 	}
 	return os.Chdir(dir)
 }
 
-func exit(args []string) (err error) {
+func exit(argv []string) (err error) {
 	os.Exit(0)
 	return nil
 }
 
-func execCommand(args []string) (err error) {
-	cmd, err := absPathWithPATH(string(args[0]))
+func execCommand(argv []string) (err error) {
+	cmd, err := absPathWithPATH(string(argv[0]))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -70,7 +70,7 @@ func execCommand(args []string) (err error) {
 	var procAttr os.ProcAttr
 	procAttr.Files = []*os.File{nil, os.Stdout, os.Stderr}
 
-	process, err := os.StartProcess(cmd, args, &procAttr)
+	process, err := os.StartProcess(cmd, argv, &procAttr)
 	if err != nil {
 		log.Fatal(err)
 	}
